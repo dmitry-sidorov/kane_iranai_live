@@ -84,8 +84,8 @@ defmodule KaneIranaiLiveWeb do
 
       # HTML escaping functionality
       import Phoenix.HTML
-      # Core UI components
-      import KaneIranaiLiveWeb.CoreComponents
+      # Mishka Chelekom UI components
+      use KaneIranaiLiveWeb.Components.MishkaComponents
 
       # Common modules used in templates
       alias Phoenix.LiveView.JS
