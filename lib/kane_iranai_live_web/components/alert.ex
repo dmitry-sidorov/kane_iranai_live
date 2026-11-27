@@ -55,15 +55,15 @@ defmodule KaneIranaiLiveWeb.Components.Alert do
   attr :id, :string, doc: "A unique identifier is used to manage state and interaction"
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
   attr :title, :string, default: nil, doc: "Specifies the title of the element"
-  attr :kind, :atom, default: :natural, doc: "used for styling and flash lookup"
+  attr :kind, :atom, default: :info, doc: "used for styling and flash lookup"
 
   attr :rest, :global,
     doc:
       "Global attributes can define defaults which are merged with attributes provided by the caller"
 
   attr :variant, :string, default: "base", doc: "Determines the style"
-  attr :position, :string, default: "", doc: "Determines the element position"
-  attr :width, :string, default: "full", doc: "Determines the element width"
+  attr :position, :string, default: "top_right", doc: "Determines the element position"
+  attr :width, :string, default: "large", doc: "Determines the element width"
   attr :border, :string, default: "extra_small", doc: "Determines the element border width"
   attr :z_index, :string, default: "z-50", doc: "custom z-index"
   attr :padding, :string, default: "small", doc: "Determines the element padding size"
@@ -73,7 +73,7 @@ defmodule KaneIranaiLiveWeb.Components.Alert do
     doc:
       "Determines the overall size of the elements, including padding, font size, and other items"
 
-  attr :rounded, :string, default: "small", doc: "Determines the border radius"
+  attr :rounded, :string, default: "medium", doc: "Determines the border radius"
 
   attr :font_weight, :string,
     default: "font-normal",
@@ -107,6 +107,7 @@ defmodule KaneIranaiLiveWeb.Components.Alert do
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
       id={@id}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide_alert("##{@id}")}
+      phx-hook="Flash"
       role="alert"
       aria-live="assertive"
       aria-labelledby={@title && @id && "#{@id}-title"}
