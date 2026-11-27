@@ -13,13 +13,97 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         <:subtitle>Use this form to manage <%= schema.singular %> records in your database.</:subtitle>
       </.header>
 
-      <.form for={@form} id="<%= schema.singular %>-form" phx-change="validate" phx-submit="save">
-<%= Mix.Tasks.Phx.Gen.Html.indent_inputs(inputs, 8) %>
-        <footer>
-          <.button phx-disable-with="Saving..." variant="primary">Save <%= schema.human_singular %></.button>
-          <.button navigate={return_path(<%= assign_scope_prefix %>@return_to, @<%= schema.singular %>)}>Cancel</.button>
-        </footer>
-      </.form>
+      <.form_wrapper
+        for={@form}
+        id="<%= schema.singular %>-form"
+        phx-change="validate"
+        phx-submit="save"
+        space="medium"
+        padding="large"
+        rounded="large"
+        action_wrapper_class="mt-2 flex items-center gap-3"
+      >
+<%= for {key, type} <- schema.attrs, type != :map and not match?({:references, _}, type) do %>
+<%=
+  label = Phoenix.Naming.humanize(Atom.to_string(key))
+  field = "@form[#{inspect(key)}]"
+
+  case type do
+    :integer ->
+      ~s|        <.number_field field={#{field}} label="#{label}" />|
+
+    :float ->
+      ~s|        <.number_field field={#{field}} label="#{label}" step="any" />|
+
+    :decimal ->
+      ~s|        <.number_field field={#{field}} label="#{label}" step="any" />|
+
+    :boolean ->
+      ~s|        <.input field={#{field}} type="checkbox" label="#{label}" />|
+
+    :text ->
+      ~s|        <.textarea_field field={#{field}} label="#{label}" />|
+
+    :date ->
+      ~s|        <.date_time_field field={#{field}} type="date" label="#{label}" />|
+
+    :time ->
+      ~s|        <.date_time_field field={#{field}} type="time" label="#{label}" />|
+
+    type when type in [:utc_datetime, :naive_datetime] ->
+      ~s|        <.date_time_field field={#{field}} type="datetime-local" label="#{label}" />|
+
+    {:array, inner} ->
+      options =
+        case inner do
+          :string -> Enum.map([1, 2], &{"Option #{&1}", "option#{&1}"})
+          :integer -> Enum.map([1, 2], &{"#{&1}", &1})
+          _ -> []
+        end
+
+      """
+              <.input
+                field={#{field}}
+                type="select"
+                multiple
+                label="#{label}"
+                options={#{inspect(options)}}
+              />
+      """
+
+    {:enum, _} ->
+      """
+              <.input
+                field={#{field}}
+                type="select"
+                label="#{label}"
+                prompt="Choose a value"
+                options={Ecto.Enum.values(#{inspect(schema.module)}, #{inspect(key)})}
+              />
+      """
+
+    _ ->
+      component =
+        cond do
+          key == :email or String.ends_with?(to_string(key), "_email") -> "email_field"
+          key == :url or String.ends_with?(to_string(key), "_url") -> "url_field"
+          String.contains?(to_string(key), "password") -> "password_field"
+          true -> "text_field"
+        end
+
+      ~s|        <.#{component} field={#{field}} label="#{label}" />|
+  end
+%>
+<% end %>
+        <:actions>
+          <.button type="submit" variant="default" color="primary" phx-disable-with="Saving...">
+            Save <%= schema.human_singular %>
+          </.button>
+          <.button_link navigate={return_path(<%= assign_scope_prefix %>@return_to, @<%= schema.singular %>)}>
+            Cancel
+          </.button_link>
+        </:actions>
+      </.form_wrapper>
     </Layouts.app>
     """
   end

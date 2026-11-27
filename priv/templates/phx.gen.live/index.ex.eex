@@ -10,9 +10,14 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       <.header>
         Listing <%= schema.human_plural %>
         <:actions>
-          <.button variant="primary" navigate={~p"<%= scope_assign_route_prefix %><%= schema.route_prefix %>/new"}>
-            <.icon name="hero-plus" /> New <%= schema.human_singular %>
-          </.button>
+          <.button_link
+            variant="default"
+            color="primary"
+            navigate={~p"<%= scope_assign_route_prefix %><%= schema.route_prefix %>/new"}
+            icon="hero-plus"
+          >
+            New <%= schema.human_singular %>
+          </.button_link>
         </:actions>
       </.header>
 
@@ -26,7 +31,14 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           <div class="sr-only">
             <.link navigate={~p"<%= scope_assign_route_prefix %><%= schema.route_prefix %>/#{<%= schema.singular %>}"}>Show</.link>
           </div>
-          <.link navigate={~p"<%= scope_assign_route_prefix %><%= schema.route_prefix %>/#{<%= schema.singular %>}/edit"}>Edit</.link>
+          <.button_link
+            navigate={~p"<%= scope_assign_route_prefix %><%= schema.route_prefix %>/#{<%= schema.singular %>}/edit"}
+            variant="transparent"
+            color="primary"
+            size="small"
+          >
+            Edit
+          </.button_link>
         </:action>
         <:action :let={{id, <%= schema.singular %>}}>
           <.link
