@@ -825,4 +825,10 @@ defmodule KaneIranaiLiveWeb.Components.Alert do
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
   end
+
+  def handle_event("close-flash", socket) do
+    JS.push("lv:clear-flash", value: %{key: socket.assigns.kind}) |> hide_alert("##{socket.assigns.id}")
+
+    {:noreply, socket}
+  end
 end

@@ -23,8 +23,10 @@ const Flash = {
         this.el.style.opacity = "0"
 
         setTimeout(() => {
-            this.pushEvent("close-flash", { id: this.el.id })
+            this.pushEvent("close-flash")
         }, 300)
         }, delay)
     }
 }
+
+export default Flash;
