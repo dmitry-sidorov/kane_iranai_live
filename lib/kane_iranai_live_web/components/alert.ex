@@ -827,7 +827,8 @@ defmodule KaneIranaiLiveWeb.Components.Alert do
   end
 
   def handle_event("close-flash", socket) do
-    JS.push("lv:clear-flash", value: %{key: socket.assigns.kind}) |> hide_alert("##{socket.assigns.id}")
+    JS.push("lv:clear-flash", value: %{key: socket.assigns.kind})
+    |> hide_alert("##{socket.assigns.id}")
 
     {:noreply, socket}
   end

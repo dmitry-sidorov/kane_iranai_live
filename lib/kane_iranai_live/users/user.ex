@@ -24,7 +24,6 @@ defmodule KaneIranaiLive.Users.User do
     |> cast(attrs, [:first_name, :last_name])
   end
 
-
   @doc """
   A user changeset for registering or changing the email.
 
