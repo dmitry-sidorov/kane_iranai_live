@@ -10,9 +10,20 @@ defmodule KaneIranaiLive.Users.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+    field :first_name, :string
+    field :last_name, :string
 
     timestamps(type: :utc_datetime)
   end
+
+  @doc """
+  A user changeset for changing bio (first_name, last_name, etc.).
+  """
+  def user_bio_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:first_name, :last_name])
+  end
+
 
   @doc """
   A user changeset for registering or changing the email.

@@ -9,6 +9,8 @@ defmodule KaneIranaiLive.Repo.Migrations.CreateUsersAuthTables do
       add :email, :citext, null: false
       add :hashed_password, :string
       add :confirmed_at, :utc_datetime
+      add :first_name, :string
+      add :last_name, :string
 
       timestamps(type: :utc_datetime)
     end
